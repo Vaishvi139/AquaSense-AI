@@ -1,0 +1,292 @@
+
+{% extends "base.html" %}
+
+{% block title %}Model Performance | AquaSense AI{% endblock %}
+{% block page_heading %}Model Performance{% endblock %}
+
+{% block content %}
+
+<section class="section-block performance-page">
+
+    <div class="performance-intro">
+        <p class="performance-eyebrow">
+            MODEL EVALUATION
+        </p>
+
+        <h2>
+            Model Performance Dashboard
+        </h2>
+
+        <p>
+            Compare the prediction errors and R² scores of your trained models.
+        </p>
+    </div>
+
+    <!-- 1. RMSE Chart -->
+    <div class="performance-chart-card">
+        <h3>1. Root Mean Squared Error (RMSE)</h3>
+        <p>Lower RMSE generally indicates smaller prediction errors.</p>
+        <div class="chart-container">
+            <canvas id="rmseChart"></canvas>
+        </div>
+    </div>
+
+    <!-- 2. MAE Chart -->
+    <div class="performance-chart-card">
+        <h3>2. Mean Absolute Error (MAE)</h3>
+        <p>Lower MAE indicates a smaller average absolute prediction error.</p>
+        <div class="chart-container">
+            <canvas id="maeChart"></canvas>
+        </div>
+    </div>
+
+    <!-- 3. R² Chart -->
+    <div class="performance-chart-card">
+        <h3>3. R² Score</h3>
+        <p>Higher R² generally indicates a better fit to the evaluation data.</p>
+        <div class="chart-container">
+            <canvas id="r2Chart"></canvas>
+        </div>
+    </div>
+
+    <!-- 4. Interactive Comparison Chart -->
+    <div class="performance-chart-card comparison-card">
+        <h3>4. Compare All Models</h3>
+        <p>Select a metric to compare all three models.</p>
+
+        <label for="metricSelector" class="form-label">
+            Choose evaluation metric
+        </label>
+
+        <select id="metricSelector" class="form-select">
+            <option value="rmse">RMSE</option>
+            <option value="mae">MAE</option>
+            <option value="r2">R² Score</option>
+        </select>
+
+        <div class="chart-container comparison-chart-container">
+            <canvas id="comparisonChart"></canvas>
+        </div>
+
+        <p id="comparisonDescription" class="comparison-description">
+            Lower RMSE is generally better.
+        </p>
+    </div>
+
+</section>
+
+<!-- Safely pass Flask metrics to JavaScript -->
+<script type="application/json" id="modelMetricsData">
+    {{ metrics | tojson }}
+</script>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    const dataElement = document.getElementById("modelMetricsData");
+    const page = document.querySelector(".performance-page");
+
+    if (!dataElement || typeof Chart === "undefined") {
+        page.insertAdjacentHTML(
+            "beforeend",
+            '<p class="alert alert-warning">Chart.js or model metrics data could not be loaded.</p>'
+        );
+        return;
+    }
+
+    let rawMetrics;
+
+    try {
+        rawMetrics = JSON.parse(dataElement.textContent);
+    } catch (error) {
+        page.insertAdjacentHTML(
+            "beforeend",
+            '<p class="alert alert-warning">Unable to read model metrics. Check models/metrics.json.</p>'
+        );
+        return;
+    }
+
+    /*
+     * Supports metrics supplied as either a list or a dictionary.
+     */
+    const aliases = {
+        "Linear Regression": "Linear Regression",
+        "linear_regression": "Linear Regression",
+        "linear_regression_model": "Linear Regression",
+
+        "Random Forest": "Random Forest",
+        "random_forest": "Random Forest",
+        "random_forest_regression": "Random Forest",
+
+        "Gradient Boosting": "HistGradientBoosting",
+        "HistGradientBoosting": "HistGradientBoosting",
+        "HistGradientBoostingRegressor": "HistGradientBoosting",
+        "hist_gradient_boosting": "HistGradientBoosting",
+        "histgradientboostingregressor": "HistGradientBoosting"
+    };
+
+    let records = [];
+
+    if (Array.isArray(rawMetrics)) {
+        records = rawMetrics.map(item => {
+            const name = item.model || item.name || "";
+
+            return {
+                model: aliases[name] || name,
+                mae: Number(item.mae),
+                rmse: Number(item.rmse),
+                r2: Number(item.r2)
+            };
+        });
+    } else if (rawMetrics && typeof rawMetrics === "object") {
+        records = Object.entries(rawMetrics).map(([name, values]) => ({
+            model: aliases[name] || name,
+            mae: Number(values.mae),
+            rmse: Number(values.rmse),
+            r2: Number(values.r2)
+        }));
+    }
+
+    const desiredOrder = [
+        "Linear Regression",
+        "Random Forest",
+        "HistGradientBoosting"
+    ];
+
+    const orderedRecords = desiredOrder.map(name =>
+        records.find(record => record.model === name)
+    );
+
+    if (
+        orderedRecords.some(record => !record) ||
+        orderedRecords.some(record =>
+            !Number.isFinite(record.mae) ||
+            !Number.isFinite(record.rmse) ||
+            !Number.isFinite(record.r2)
+        )
+    ) {
+        page.insertAdjacentHTML(
+            "beforeend",
+            '<p class="alert alert-warning">Metrics are missing, invalid, or use different model names. Check models/metrics.json and the metrics-loading code in app.py.</p>'
+        );
+        return;
+    }
+
+    const labels = orderedRecords.map(record => record.model);
+    const colors = ["#42a5f5", "#26a69a", "#7e78df"];
+
+    function makeOptions(isR2 = false) {
+        return {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    display: false
+                },
+                tooltip: {
+                    enabled: true
+                }
+            },
+            scales: {
+                x: {
+                    ticks: {
+                        color: "#24445e",
+                        autoSkip: false,
+                        maxRotation: 0,
+                        minRotation: 0
+                    },
+                    grid: {
+                        display: false
+                    }
+                },
+                y: {
+                    beginAtZero: !isR2,
+                    ticks: {
+                        color: "#24445e"
+                    },
+                    grid: {
+                        color: "rgba(60, 100, 130, 0.12)"
+                    }
+                }
+            }
+        };
+    }
+
+    function createMetricChart(canvasId, key, label, isR2 = false) {
+        const canvas = document.getElementById(canvasId);
+
+        return new Chart(canvas, {
+            type: "bar",
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: label,
+                    data: orderedRecords.map(record => record[key]),
+                    backgroundColor: colors,
+                    borderRadius: 8,
+                    maxBarThickness: 75
+                }]
+            },
+            options: makeOptions(isR2)
+        });
+    }
+
+    // Create the three individual metric charts.
+    createMetricChart("rmseChart", "rmse", "RMSE");
+    createMetricChart("maeChart", "mae", "MAE");
+    createMetricChart("r2Chart", "r2", "R² Score", true);
+
+    // Create the interactive comparison chart.
+    const selector = document.getElementById("metricSelector");
+    const description = document.getElementById("comparisonDescription");
+
+    const metricInfo = {
+        rmse: {
+            label: "RMSE",
+            description: "Lower RMSE is generally better."
+        },
+        mae: {
+            label: "MAE",
+            description: "Lower MAE is generally better."
+        },
+        r2: {
+            label: "R² Score",
+            description: "Higher R² is generally better."
+        }
+    };
+
+    const comparisonChart = new Chart(
+        document.getElementById("comparisonChart"),
+        {
+            type: "bar",
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: "RMSE",
+                    data: orderedRecords.map(record => record.rmse),
+                    backgroundColor: colors,
+                    borderRadius: 8,
+                    maxBarThickness: 85
+                }]
+            },
+            options: makeOptions()
+        }
+    );
+
+    selector.addEventListener("change", function () {
+        const key = selector.value;
+
+        comparisonChart.data.datasets[0].label = metricInfo[key].label;
+        comparisonChart.data.datasets[0].data =
+            orderedRecords.map(record => record[key]);
+
+        comparisonChart.options.scales.y.beginAtZero = key !== "r2";
+
+        comparisonChart.update();
+        description.textContent = metricInfo[key].description;
+    });
+
+});
+</script>
+
+{% endblock %}

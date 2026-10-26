@@ -1,0 +1,1562 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#0b1730">
+
+    <title>AquaSense AI | Water Intelligence</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+<div class="app-layout">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+        <a href="#dashboard" class="brand">
+            <span class="brand-mark">
+                <svg viewBox="0 0 40 48" aria-hidden="true">
+                    <path
+                        d="M20 2 C16 10 5 22 5 31 C5 40 11.5 46 20 46 C28.5 46 35 40 35 31 C35 22 24 10 20 2 Z"
+                        fill="#40e0d0"
+                    />
+                    <path
+                        d="M12 31 C12 36 15 39 19 40"
+                        fill="none"
+                        stroke="#ffffff"
+                        stroke-width="2.5"
+                        stroke-linecap="round"
+                    />
+                </svg>
+            </span>
+            <span>AquaSense <span class="brand-ai">AI</span></span>
+        </a>
+
+        <p class="sidebar-caption">WORKSPACE</p>
+
+        <nav aria-label="Main navigation">
+            <a class="nav-link-custom active" href="#dashboard">
+                <span class="nav-symbol">⌂</span> Dashboard
+            </a>
+            <a class="nav-link-custom" href="#analyzer">
+                <span class="nav-symbol">◉</span> Water Analyzer
+            </a>
+             <a class="nav-link-custom" href="#insights">
+                <span class="nav-symbol">✦</span> Water Insights
+            </a>
+            <a class="nav-link-custom" href="#results">
+                <span class="nav-symbol">▥</span> Predictions
+            </a>
+            <a class="nav-link-custom" href="#performance">
+                <span class="nav-symbol">▤</span> Model Performance
+            </a>
+            <a class="nav-link-custom" href="#history">
+                <span class="nav-symbol">◷</span> Prediction History
+            </a>
+        </nav>
+
+        <div class="sidebar-bottom">
+            <strong>AquaSense AI</strong><br>
+            Machine Learning Application<br>
+        </div>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <div class="main-content">
+
+        <header class="topbar">
+            <div>
+                <p class="topbar-title">Water Intelligence</p>
+                <small class="topbar-subtitle">Explore your water-quality data</small>
+            </div>
+
+            <button id="themeToggle"
+             class="theme-toggle"
+             type="button"
+             aria-label="Switch to dark mode"
+             aria-pressed="false">
+             🌙 Dark mode
+            </button>
+        </header>
+
+        <main class="content-area">
+
+            <!-- 1. DASHBOARD HERO -->
+            <section class="dashboard-screen" id="dashboard">
+
+                <div class="hero-panel">
+                    <div class="hero-content">
+
+                        <div class="hero-top-label">
+                            <span class="live-dot"></span>
+                            AQUASENSE INTELLIGENCE SYSTEM
+                        </div>
+
+                        <p class="eyebrow">SMART WATER ANALYTICS</p>
+
+                        <h1>
+                            Understand your water.
+                            <span>Explore its quality.</span>
+                        </h1>
+
+                        <p class="hero-description">
+                            Discover water-quality patterns with machine learning.
+                            Analyze measurements, compare three regression models,
+                            and explore predicted pH values in one intelligent dashboard.
+                        </p>
+
+                        <div class="hero-stats">
+
+                            <div class="hero-stat">
+                                <span class="stat-icon">◉</span>
+                                <div>
+                                    <strong>3 ML Models</strong>
+                                    <small>Prediction comparison</small>
+                                </div>
+                            </div>
+
+                            <div class="hero-stat">
+                                <span class="stat-icon">⌁</span>
+                                <div>
+                                    <strong>Smart Analytics</strong>
+                                    <small>Water parameter insights</small>
+                                </div>
+                            </div>
+
+                            <div class="hero-stat">
+                                <span class="stat-icon">◷</span>
+                                <div>
+                                    <strong>Saved Results</strong>
+                                    <small>Prediction history</small>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <!-- ANIMATED WATER GRAPHIC -->
+                    <div class="water-visual" aria-label="Animated water illustration">
+
+                        <div class="orbit orbit-one"></div>
+                        <div class="orbit orbit-two"></div>
+
+                        <div class="water-orb">
+                            <div class="orb-shine"></div>
+                            <div class="orb-wave wave-one"></div>
+                            <div class="orb-wave wave-two"></div>
+
+                            <div class="orb-content">
+                                <span class="drop-icon">💧</span>
+                                <strong>AquaSense</strong>
+                                <small>Water Intelligence</small>
+                            </div>
+                        </div>
+
+                        <div class="floating-card floating-card-top">
+                            <span class="floating-icon">⌁</span>
+                            <div>
+                                <small>AI ANALYSIS</small>
+                                <strong>3 Models</strong>
+                            </div>
+                            <span class="floating-status">●</span>
+                        </div>
+
+                        <div class="floating-card floating-card-bottom">
+                            <span class="floating-icon">◉</span>
+                            <div>
+                                <small>PH MONITORING</small>
+                                <strong>0 – 14 Scale</strong>
+                            </div>
+                        </div>
+
+                        <div class="visual-caption">
+                            <span class="live-dot"></span>
+                            Explore your water data
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- HERO BOTTOM ACTION -->
+                <div class="dashboard-bottom">
+
+                    <div class="dashboard-bottom-text">
+                        <span class="bottom-line"></span>
+                        <span>YOUR WATER ANALYSIS STARTS HERE</span>
+                    </div>
+
+                    <a href="#analyzer" class="hero-button">
+                        Start Water Analysis
+                        <span class="button-arrow">↓</span>
+                    </a>
+                </div>
+
+            </section>
+
+            <!-- 2. WATER ANALYZER -->
+            <section class="section-block" id="analyzer">
+
+                <p class="eyebrow">INPUT PARAMETERS</p>
+                <h2 class="section-title">Water Quality Analyzer</h2>
+
+                <p class="section-description mb-4">
+                    Enter the measured values for your water sample.
+                </p>
+
+                <form method="POST" action="/" class="panel" id="waterAnalyzerForm">
+
+                    <div class="form-section-heading">
+                        <span class="form-section-icon">⌁</span>
+                        <div>
+                            <h3>Sample Measurements</h3>
+                            <p>Enter five parameters before analyzing.</p>
+                        </div>
+                    </div>
+
+                    <div class="row g-4">
+
+                        <div class="col-md-6 col-xl-4">
+                            <label for="temperature">Temperature (°C)</label>
+                            <input
+                                class="form-control"
+                                id="temperature"
+                                type="number"
+                                step="any"
+                                name="temperature"
+                                value="{{ values.temperature }}"
+                                placeholder="e.g. 25"
+                                required
+                            >
+                            <small class="input-help">Water temperature in Celsius</small>
+                        </div>
+
+                        <div class="col-md-6 col-xl-4">
+                            <label for="turbidity">Turbidity (NTU)</label>
+                            <input
+                                class="form-control"
+                                id="turbidity"
+                                type="number"
+                                min="0"
+                                step="any"
+                                name="turbidity"
+                                value="{{ values.turbidity }}"
+                                placeholder="e.g. 2.5"
+                                required
+                            >
+                            <small class="input-help">Cloudiness measurement</small>
+                        </div>
+
+                        <div class="col-md-6 col-xl-4">
+                            <label for="tds">Total Dissolved Solids (mg/L)</label>
+                            <input
+                                class="form-control"
+                                id="tds"
+                                type="number"
+                                min="0"
+                                step="any"
+                                name="tds"
+                                value="{{ values.tds }}"
+                                placeholder="e.g. 250"
+                                required
+                            >
+                            <small class="input-help">Dissolved material concentration</small>
+                        </div>
+
+                        <div class="col-md-6 col-xl-4">
+                            <label for="conductivity">Conductivity (µS/cm)</label>
+                            <input
+                                class="form-control"
+                                id="conductivity"
+                                type="number"
+                                min="0"
+                                step="any"
+                                name="conductivity"
+                                value="{{ values.conductivity }}"
+                                placeholder="e.g. 450"
+                                required
+                            >
+                            <small class="input-help">Electrical conductivity</small>
+                        </div>
+
+                        <div class="col-md-6 col-xl-4">
+                            <label for="dissolved_oxygen">Dissolved Oxygen (mg/L)</label>
+                            <input
+                                class="form-control"
+                                id="dissolved_oxygen"
+                                type="number"
+                                min="0"
+                                step="any"
+                                name="dissolved_oxygen"
+                                value="{{ values.dissolved_oxygen }}"
+                                placeholder="e.g. 7"
+                                required
+                            >
+                            <small class="input-help">Oxygen dissolved in the sample</small>
+                        </div>
+
+                        <div class="col-12">
+                            <div class="analyzer-submit-row">
+                                <p class="analyzer-note">
+                                    <span>ⓘ</span>
+                                    Enter values in the units shown above.
+                                </p>
+
+                                <button type="submit" class="btn-predict">
+                                    Analyze Water <span>→</span>
+                                </button>
+                            </div>
+                        </div>
+
+                    </div>
+                </form>
+
+                {% if error %}
+                <div class="alert alert-danger mt-4" role="alert">
+                    <strong>Analysis error:</strong> {{ error }}
+                </div>
+                {% endif %}
+
+            </section>
+
+                        <!-- 5. WATER INSIGHTS -->
+            <section class="section-block" id="insights">
+
+                <p class="eyebrow">SMART INTERPRETATION</p>
+                <h2 class="section-title">Water Quality Insights</h2>
+
+                <p class="section-description mb-4">
+                    Review the pH interpretation and recommendation.
+                </p>
+
+                <div class="row g-4">
+
+                    <!-- PH INTERPRETATION -->
+                    <div class="col-lg-6">
+                        <div class="panel insights-card h-100">
+
+                            <div class="insights-card-heading">
+                                <span class="insights-icon">◉</span>
+                                <div>
+                                    <h3>pH Interpretation</h3>
+                                    <p>Based on the latest available prediction</p>
+                                </div>
+                            </div>
+
+                            {% if predictions %}
+
+                           {% set linear_key = predictions.keys() | select('lower') | list %}
+{% set insight_ph = predictions.values() | list | first | float %}
+{% for model_name, model_ph in predictions.items() %}
+    {% if 'linear' in model_name | lower %}
+        {% set insight_ph = model_ph | float %}
+    {% endif %}
+{% endfor %}
+                            <div class="insight-ph-value">
+                                {{ "%.2f"|format(insight_ph) }}
+                                <span>pH</span>
+                            </div>
+
+                            {% if insight_ph < 6.5 %}
+
+                            <span class="insight-status insight-status-warning">
+                                Below general reference range
+                            </span>
+
+                            <p class="insight-description">
+                                The predicted value is acidic relative to the general
+                                reference range of pH 6.5–8.5.
+                            </p>
+
+                            {% elif insight_ph <= 8.5 %}
+
+                            <span class="insight-status insight-status-good">
+                                Within general reference range
+                            </span>
+
+                            <p class="insight-description">
+                                The predicted pH is within the general reference range
+                                of 6.5–8.5. This does not establish that water is safe to drink.
+                            </p>
+
+                            {% else %}
+
+                            <span class="insight-status insight-status-warning">
+                                Above general reference range
+                            </span>
+
+                            <p class="insight-description">
+                                The predicted value is alkaline relative to the general
+                                reference range of pH 6.5–8.5.
+                            </p>
+
+                            {% endif %}
+
+                            {% else %}
+
+                            <div class="insight-ph-value">-- <span>pH</span></div>
+
+                            <span class="insight-status insight-status-neutral">
+                                Awaiting prediction
+                            </span>
+
+                            <p class="insight-description">
+                                Analyze a sample to display the latest predicted pH interpretation.
+                            </p>
+
+                            <a href="#analyzer" class="section-action">
+                                Analyze a sample →
+                            </a>
+
+                            {% endif %}
+
+                        </div>
+                    </div>
+
+                    <!-- RECOMMENDED STEPS -->
+                    <div class="col-lg-6">
+                        <div class="panel insights-card h-100">
+
+                            <div class="insights-card-heading">
+                                <span class="insights-icon">✦</span>
+                                <div>
+                                    <h3>Recommended Next Steps</h3>
+                                </div>
+                            </div>
+
+                            <ul class="insight-list">
+
+                                <li>
+                                    <span class="insight-list-number">1</span>
+                                    <div>
+                                        <strong>Verify the pH</strong>
+                                        <p>
+                                            Use a calibrated pH meter or a suitable laboratory test.
+                                        </p>
+                                    </div>
+                                </li>
+
+                                <li>
+                                    <span class="insight-list-number">2</span>
+                                    <div>
+                                        <strong>Review other parameters</strong>
+                                        <p>
+                                            Consider turbidity, TDS, conductivity, and dissolved oxygen together.
+                                        </p>
+                                    </div>
+                                </li>
+
+                                <li>
+                                    <span class="insight-list-number">3</span>
+                                    <div>
+                                        <strong>Confirm overall water quality</strong>
+                                        <p>
+                                            Use suitable laboratory testing and applicable local standards
+                                            before making drinking-water decisions.
+                                        </p>
+                                    </div>
+                                </li>
+
+                            </ul>
+
+                        </div>
+                    </div>
+
+                </div>
+                
+<!-- MEASUREMENT INSIGHTS -->
+<div class="panel mt-4 measurement-insights">
+    <div class="insights-card-heading">
+        <span class="insights-icon">◈</span>
+        <div>
+            <h3>Measurement Overview</h3>
+            <p>Review the recorded input values used by the analyzer.</p>
+        </div>
+    </div>
+
+    {% if values %}
+    <div class="row g-3 mt-2">
+
+        <div class="col-12 col-md-6 col-xl-4">
+            <div class="measurement-item">
+                <span class="measurement-symbol">🌡️</span>
+                <div>
+                    <strong>Temperature</strong>
+                    <p class="measurement-value">
+                        {{ values.temperature | default('—', true) }} °C
+                    </p>
+                    <small>Water temperature can affect chemical and biological processes.</small>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12 col-md-6 col-xl-4">
+            <div class="measurement-item">
+                <span class="measurement-symbol">💧</span>
+                <div>
+                    <strong>Turbidity</strong>
+                    <p class="measurement-value">
+                        {{ values.turbidity | default('—', true) }}
+                    </p>
+                    <small>Indicates how cloudy the water is; confirm the unit used by your dataset.</small>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12 col-md-6 col-xl-4">
+            <div class="measurement-item">
+                <span class="measurement-symbol">🧪</span>
+                <div>
+                    <strong>Total Dissolved Solids (TDS)</strong>
+                    <p class="measurement-value">
+                        {{ values.tds | default('—', true) }}
+                    </p>
+                    <small>Represents dissolved substances; the measurement unit matters.</small>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12 col-md-6 col-xl-4">
+            <div class="measurement-item">
+                <span class="measurement-symbol">⚡</span>
+                <div>
+                    <strong>Conductivity</strong>
+                    <p class="measurement-value">
+                        {{ values.conductivity | default('—', true) }}
+                    </p>
+                    <small>Reflects how readily water conducts electricity, often related to dissolved ions.</small>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12 col-md-6 col-xl-4">
+            <div class="measurement-item">
+                <span class="measurement-symbol">🫧</span>
+                <div>
+                    <strong>Dissolved Oxygen</strong>
+                    <p class="measurement-value">
+                        {{ values.dissolved_oxygen | default('—', true) }}
+                    </p>
+                    <small>Important for aquatic ecosystems; interpretation depends on conditions and units.</small>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    {% else %}
+    <p class="insight-description mt-3">
+        Submit a sample in the Water Quality Analyzer to see its measurements here.
+    </p>
+    <a href="#analyzer" class="section-action">Analyze a sample →</a>
+    {% endif %}
+</div>
+<!-- END MEASUREMENT INSIGHTS -->
+            </section>
+
+            <!-- 3. MODEL PREDICTIONS -->
+            <section class="section-block" id="results">
+
+                <p class="eyebrow">PREDICTION RESULTS</p>
+                <h2 class="section-title">Model Predictions</h2>
+
+                {% if predictions %}
+
+                <p class="section-description mb-4">
+                    Compare the pH values estimated by your trained regression models.
+                </p>
+
+                <div class="prediction-toolbar">
+                    <span class="prediction-count">
+                        <span class="status-dot"></span>
+                        {{ predictions | length }} model predictions available
+                    </span>
+
+                    <form
+                        action="{{ url_for('download_report') }}"
+                        method="POST"
+                        class="report-form"
+                    >
+                        <button type="submit" class="btn btn-outline-primary report-button">
+                            <span>↓</span> Download Report (CSV)
+                        </button>
+                    </form>
+                </div>
+
+                <div class="row g-3 prediction-grid">
+
+                    {% for name, value in predictions.items() %}
+                    <div class="col-md-4">
+                        <article class="result-card">
+                            <div class="result-card-top">
+                                <span class="result-card-icon">◉</span>
+                                <span class="result-mini-label">ML MODEL</span>
+                            </div>
+
+                            <p class="result-label">{{ name }}</p>
+
+                            <div class="result-value">
+                                {{ "%.2f"|format(value) }}
+                            </div>
+
+                            <div class="result-card-bottom">
+                                <span class="result-value-label">Predicted pH</span>
+                                <span class="result-arrow">↗</span>
+                            </div>
+                        </article>
+                    </div>
+                    {% endfor %}
+
+                </div>
+
+                <!-- INTERACTIVE PH GAUGE -->
+                <div class="panel ph-gauge-panel mt-4">
+
+                    <div class="panel-heading">
+                        <div>
+                            <p class="eyebrow">VISUAL ANALYSIS</p>
+                            <h3>Interactive pH Gauge</h3>
+                        </div>
+
+                        <span class="gauge-badge">MODEL OUTPUT</span>
+                    </div>
+
+                    <div class="ph-gauge-container">
+
+                        <div class="ph-chart-wrap">
+                            <canvas
+                                id="phGaugeChart"
+                                role="img"
+                                aria-label="Doughnut gauge displaying the predicted pH value"
+                            ></canvas>
+
+                            <div class="ph-gauge-center">
+                                <span id="phValue">--</span>
+                                <small>pH level</small>
+                            </div>
+                        </div>
+
+                        <div class="ph-scale">
+                            <span>0 · Acidic</span>
+                            <span>7 · Neutral</span>
+                            <span>14 · Alkaline</span>
+                        </div>
+
+                        <div
+                            id="phInterpretation"
+                            class="ph-interpretation"
+                            aria-live="polite"
+                        ></div>
+
+                    </div>
+
+                    <p class="gauge-disclaimer">
+                        The gauge displays a model estimate, not a laboratory measurement.
+                    </p>
+
+                </div>
+
+                <!-- GAUGE DATA -->
+                <script id="ph-prediction-data" type="application/json">{{ predictions.values() | list | first | tojson }}</script>
+
+                <script>
+                (() => {
+                    const dataNode = document.getElementById("ph-prediction-data");
+                    const canvas = document.getElementById("phGaugeChart");
+
+                    if (!dataNode || !canvas) return;
+
+                    const ph = Number(dataNode.textContent.trim());
+                    const valueNode = document.getElementById("phValue");
+                    const noteNode = document.getElementById("phInterpretation");
+
+                    if (!Number.isFinite(ph)) {
+                        noteNode.textContent = "Prediction unavailable.";
+                        return;
+                    }
+
+                    valueNode.textContent = ph.toFixed(2);
+
+                    const boundedPH = Math.max(0, Math.min(14, ph));
+
+                    let gaugeColor = "#22c55e";
+
+                    if (ph < 6.5) {
+                        gaugeColor = "#ef4444";
+                    } else if (ph > 8.5) {
+                        gaugeColor = "#f59e0b";
+                    }
+
+                    if (ph < 6.5) {
+                        noteNode.textContent =
+                            "Acidic prediction. Verify the value with a suitable pH test.";
+                    } else if (ph <= 8.5) {
+                        noteNode.textContent =
+                            "Within the general reference range of pH 6.5–8.5. This does not establish drinking-water safety.";
+                    } else {
+                        noteNode.textContent =
+                            "Alkaline prediction. Verify the value with a suitable pH test.";
+                    }
+
+                    if (typeof Chart === "undefined") {
+                        noteNode.textContent += " Chart.js could not be loaded.";
+                        return;
+                    }
+
+                    new Chart(canvas, {
+                        type: "doughnut",
+
+                        data: {
+                            datasets: [{
+                                data: [boundedPH, 14 - boundedPH],
+
+                                backgroundColor: [
+                                    gaugeColor,
+                                    "rgba(148, 163, 184, 0.18)"
+                                ],
+
+                                borderWidth: 0,
+                                borderRadius: 5,
+                                hoverOffset: 0,
+                                circumference: 180,
+                                rotation: 270
+                            }]
+                        },
+
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: true,
+                            cutout: "78%",
+
+                            animation: {
+                                animateRotate: true,
+                                duration: 1400,
+                                easing: "easeOutQuart"
+                            },
+
+                            plugins: {
+                                legend: { display: false },
+                                tooltip: { enabled: false }
+                            }
+                        }
+                    });
+                })();
+                </script>
+
+                {% else %}
+
+                <div class="panel empty-state">
+                    <div class="empty-state-icon">◉</div>
+                    <h3>No predictions yet</h3>
+                    <p>
+                        Enter your water measurements and select Analyze Water
+                        to compare the model predictions.
+                    </p>
+                    <a href="#analyzer" class="section-action">
+                        Go to Water Analyzer →
+                    </a>
+                </div>
+
+                {% endif %}
+
+            </section>
+
+            <!-- 4. MODEL PERFORMANCE -->
+            <section class="section-block" id="performance">
+
+                <p class="eyebrow">MODEL EVALUATION</p>
+                <h2 class="section-title">ML Model Performance</h2>
+
+                <p class="section-description mb-4">
+                    Explore error measurements and test-set performance for your trained models.
+                </p>
+
+                {% if metrics %}
+
+                {% set best_mae = metrics | sort(attribute='mae') | first %}
+                {% set best_rmse = metrics | sort(attribute='rmse') | first %}
+                {% set best_r2 = metrics | sort(attribute='r2', reverse=true) | first %}
+
+                <!-- PERFORMANCE SUMMARY -->
+                <div class="row g-3 mb-4 performance-summary">
+
+                    <div class="col-md-6 col-xl-3">
+                        <div class="metric-card">
+                            <div class="metric-icon metric-icon-blue">▤</div>
+                            <p class="metric-label">Models Evaluated</p>
+                            <h3 class="metric-value">{{ metrics | length }}</h3>
+                            <p class="metric-note">Regression models</p>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6 col-xl-3">
+                        <div class="metric-card">
+                            <div class="metric-icon metric-icon-green">↓</div>
+                            <p class="metric-label">Lowest MAE</p>
+                            <h3 class="metric-value">{{ "%.4f"|format(best_mae.mae|float) }}</h3>
+                            <p class="metric-note">{{ best_mae.model }}</p>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6 col-xl-3">
+                        <div class="metric-card">
+                            <div class="metric-icon metric-icon-orange">⌁</div>
+                            <p class="metric-label">Lowest RMSE</p>
+                            <h3 class="metric-value">{{ "%.4f"|format(best_rmse.rmse|float) }}</h3>
+                            <p class="metric-note">{{ best_rmse.model }}</p>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6 col-xl-3">
+                        <div class="metric-card">
+                            <div class="metric-icon metric-icon-purple">↗</div>
+                            <p class="metric-label">Highest R²</p>
+                            <h3 class="metric-value">{{ "%.4f"|format(best_r2.r2|float) }}</h3>
+                            <p class="metric-note">{{ best_r2.model }}</p>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- BEST MAE MODEL -->
+                <div class="best-model-panel mb-4">
+                    <div class="best-model-icon">★</div>
+
+                    <div>
+                        <p class="best-model-label">LOWEST MEAN ABSOLUTE ERROR</p>
+                        <h3>{{ best_mae.model }}</h3>
+                        <p class="mb-0">
+                            This model has the lowest MAE among the currently evaluated models.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- MODEL COMPARISON TABLE -->
+                <div class="panel mb-4">
+
+                    <div class="panel-heading">
+                        <div>
+                            <h3 class="panel-title">Detailed Model Comparison</h3>
+                        </div>
+                        <span class="table-heading-icon">▤</span>
+                    </div>
+
+                    <div class="table-responsive">
+                        <table class="table align-middle comparison-table">
+
+                            <thead>
+                                <tr>
+                                    <th>Model</th>
+                                    <th>MAE ↓</th>
+                                    <th>RMSE ↓</th>
+                                    <th>R² ↑</th>
+                                    <th>Evaluation</th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                                {% for item in metrics %}
+                                <tr>
+                                    <td>
+                                        <strong>{{ item.model }}</strong>
+                                    </td>
+
+                                    <td>{{ "%.4f"|format(item.mae|float) }}</td>
+                                    <td>{{ "%.4f"|format(item.rmse|float) }}</td>
+                                    <td>{{ "%.4f"|format(item.r2|float) }}</td>
+
+                                    <td>
+                                        {% if item.model == best_mae.model %}
+                                        <span class="model-tag">Lowest MAE</span>
+                                        {% else %}
+                                        <span class="model-tag model-tag-neutral">Evaluated</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                         <p class="muted small">
+                                Lower MAE/RMSE and higher R² are generally better.
+                            </p>
+                    </div>
+                </div>
+
+                <!-- MAE CHART -->
+                <div class="row g-4 performance-charts">
+
+                    <div class="col-12 col-md-6 col-xl-4">
+                        <div class="panel chart-panel">
+                            <div class="chart-heading">
+                                <div>
+                                    <h3 class="panel-title">Mean Absolute Error (MAE)</h3>
+                                    <p class="chart-description">
+                                        Measures average absolute prediction error. Lower is better.
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div class="comparison-chart-wrap">
+                                <canvas id="feature3MaeChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- RMSE CHART -->
+                    <div class="col-12 col-md-6 col-xl-4">
+                        <div class="panel chart-panel">
+                            <div class="chart-heading">
+                                <div>
+                                    <h3 class="panel-title">Root Mean Squared Error (RMSE)</h3>
+                                    <p class="chart-description">
+                                        Penalizes larger errors more strongly. Lower is better.
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div class="comparison-chart-wrap">
+                                <canvas id="feature3RmseChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- R2 CHART -->
+                    <div class="col-12 col-md-6 col-xl-4">
+                        <div class="panel chart-panel">
+                            <div class="chart-heading">
+                                <div>
+                                    <h3 class="panel-title">R² Score Comparison</h3>
+                                    <p class="chart-description">
+                                        Indicates how well model predictions explain variation in the target. Higher is generally better.
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div class="comparison-chart-wrap">
+                                <canvas id="feature3R2Chart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- MODEL CHART DATA -->
+                <script id="feature3-metrics-data" type="application/json">{{ metrics | tojson }}</script>
+
+                <script>
+                (() => {
+                    const node = document.getElementById("feature3-metrics-data");
+
+                    if (!node || typeof Chart === "undefined") return;
+
+                    let rows;
+
+                    try {
+                        rows = JSON.parse(node.textContent);
+                    } catch (error) {
+                        console.error("Unable to read model metrics:", error);
+                        return;
+                    }
+
+                    if (!Array.isArray(rows) || rows.length === 0) return;
+
+                    const labels = rows.map(row => row.model);
+
+                    const chartColors = [
+                        {
+                            background: "rgba(59, 130, 246, 0.78)",
+                            border: "#3b82f6"
+                        },
+                        {
+                            background: "rgba(20, 184, 166, 0.78)",
+                            border: "#14b8a6"
+                        },
+                        {
+                            background: "rgba(168, 85, 247, 0.78)",
+                            border: "#a855f7"
+                        },
+                        {
+                            background: "rgba(249, 115, 22, 0.78)",
+                            border: "#f97316"
+                        }
+                    ];
+
+                    function makeChart(id, label, key) {
+                        const canvas = document.getElementById(id);
+
+                        if (!canvas) return;
+
+                        const values = rows.map(row => {
+                            const value = Number(row[key]);
+                            return Number.isFinite(value) ? value : null;
+                        });
+
+                        new Chart(canvas, {
+                            type: "bar",
+
+                            data: {
+                                labels: labels,
+
+                                datasets: [{
+                                    label: label,
+                                    data: values,
+
+                                    backgroundColor: labels.map((_, index) =>
+                                        chartColors[index % chartColors.length].background
+                                    ),
+
+                                    borderColor: labels.map((_, index) =>
+                                        chartColors[index % chartColors.length].border
+                                    ),
+
+                                    borderWidth: 1,
+                                    borderRadius: 8,
+                                    borderSkipped: false,
+                                    maxBarThickness: 76
+                                }]
+                            },
+
+                            options: {
+                                responsive: true,
+                                maintainAspectRatio: false,
+
+                                animation: {
+                                    duration: 1200,
+                                    easing: "easeOutQuart"
+                                },
+
+                                interaction: {
+                                    intersect: false,
+                                    mode: "index"
+                                },
+
+                                plugins: {
+                                    legend: {
+                                        display: false
+                                    },
+
+                                    tooltip: {
+                                        enabled: true,
+
+                                        backgroundColor: "#10213a",
+                                        titleColor: "#ffffff",
+                                        bodyColor: "#dbeafe",
+                                        padding: 12,
+                                        cornerRadius: 8,
+
+                                        callbacks: {
+                                            label: function (context) {
+                                                return label + ": " +
+                                                    Number(context.raw).toFixed(4);
+                                            }
+                                        }
+                                    }
+                                },
+
+                                scales: {
+                                    y: {
+                                        beginAtZero: key !== "r2",
+
+                                        grid: {
+                                            color: "rgba(148, 163, 184, 0.17)"
+                                        },
+
+                                        ticks: {
+                                            color: "#64748b"
+                                        },
+
+                                        title: {
+                                            display: true,
+                                            text: label,
+                                            color: "#64748b"
+                                        }
+                                    },
+
+                                    x: {
+                                        grid: {
+                                            display: false
+                                        },
+
+                                        ticks: {
+                                            color: "#64748b",
+                                            autoSkip: false,
+                                            maxRotation: 20,
+                                            minRotation: 0
+                                        }
+                                    }
+                                }
+                            }
+                        });
+                    }
+
+                    makeChart("feature3MaeChart", "MAE", "mae");
+                    makeChart("feature3RmseChart", "RMSE", "rmse");
+                    makeChart("feature3R2Chart", "R² Score", "r2");
+                })();
+                </script>
+
+                
+<!-- FEATURE 2: INTERACTIVE MODEL COMPARISON -->
+<div class="panel feature2-comparison mt-4">
+    <div class="comparison-heading">
+        <div>
+            <p class="eyebrow">INTERACTIVE ANALYTICS</p>
+            <h3>Explore Model Performance</h3>
+        </div>
+
+        <div class="feature2-selector">
+            <label for="feature2MetricSelect">Choose metric -</label>
+            <select id="feature2MetricSelect" class="form-select">
+                <option value="mae">MAE — Lower is better</option>
+                <option value="rmse">RMSE — Lower is better</option>
+                <option value="r2">R² — Higher is better</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="feature2-chart-wrap">
+        <canvas id="feature2ComparisonChart"
+                role="img"
+                aria-label="Interactive model performance comparison chart">
+        </canvas>
+    </div>
+
+    <div id="feature2BestModel" class="feature2-best-model"
+         aria-live="polite">
+        Select a metric to compare model performance.
+    </div>
+</div>
+
+                {% else %}
+
+                <div class="panel empty-state">
+                    <div class="empty-state-icon">▤</div>
+                    <h3>Model metrics are not available</h3>
+                    <p>
+                        Run <code>python train_model.py</code> in your VS Code terminal
+                        to generate evaluation metrics, if your training script saves them.
+                    </p>
+                </div>
+
+                {% endif %}
+
+            </section>
+
+<!-- FEATURE 5: FEATURE IMPORTANCE -->
+<section class="dashboard-section" id="feature-importance">
+    <div class="section-heading">
+        <div>
+             <h2 class="section-title">Feature Importance</h2>
+            <p class="section-description mb-4">See which measurements influence the Random Forest model most.</p>
+        </div>
+    </div>
+
+    
+<div class="chart-card">
+    <div class="importance-model">
+        <label for="importanceModelSelect">Select model</label>
+
+        <select id="importanceModelSelect">
+            <option value="linear_regression">
+                Linear Regression
+            </option>
+            <option value="random_forest_regression">
+                Random Forest
+            </option>
+            <option value="histgradientboostingregressor">
+                HistGradientBoosting
+            </option>
+        </select>
+    </div>
+
+    <div class="importance-chart-wrap">
+        <canvas
+            id="featureImportanceChart"
+            data-importance='{{ feature_importance | tojson }}'
+        ></canvas>
+    </div>
+
+    {% if not feature_importance %}
+    <p class="empty-state">
+        Feature importance data is unavailable.
+        Run train_model.py first.
+    </p>
+    {% endif %}
+</div>
+
+</section>
+
+            <!-- 6. PREDICTION HISTORY -->
+            <section class="section-block" id="history">
+
+                <div class="history-heading">
+
+                    <div>
+                        <h2 class="section-title">Prediction History</h2>
+                        <p class="section-description">
+                            Your most recent successful predictions!
+                        </p>
+                    </div>
+
+
+<!-- FEATURE 3: PREDICTION HISTORY ANALYTICS -->
+<div class="panel history-analytics mb-4">
+    <div class="panel-heading">
+        <div>
+            <p class="eyebrow">HISTORY INSIGHTS</p>
+            <p class="chart-description">
+                Analyze saved pH predictions over time.
+            </p>
+        </div>
+    </div>
+
+    <div class="row g-3 mb-4">
+        <div class="col-6 col-xl-3">
+            <div class="metric-card">
+                <p class="metric-label">Total Records</p>
+                <h3 class="metric-value" id="historyTotal">0</h3>
+            </div>
+        </div>
+
+        <div class="col-6 col-xl-3">
+            <div class="metric-card">
+                <p class="metric-label">Average pH</p>
+                <h3 class="metric-value" id="historyAverage">—</h3>
+            </div>
+        </div>
+
+        <div class="col-6 col-xl-3">
+            <div class="metric-card">
+                <p class="metric-label">Lowest pH</p>
+                <h3 class="metric-value" id="historyMinimum">—</h3>
+            </div>
+        </div>
+
+        <div class="col-6 col-xl-3">
+            <div class="metric-card">
+                <p class="metric-label">Highest pH</p>
+                <h3 class="metric-value" id="historyMaximum">—</h3>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-3 align-items-end mb-4">
+        <div class="col-12 col-md-5">
+            <label for="historyStartDate" class="form-label">
+                From date
+            </label>
+            <input type="date" id="historyStartDate"
+                   class="form-control">
+        </div>
+
+        <div class="col-12 col-md-5">
+            <label for="historyEndDate" class="form-label">
+                To date
+            </label>
+            <input type="date" id="historyEndDate"
+                   class="form-control">
+        </div>
+
+        <div class="col-12 col-md-2">
+            <button type="button" id="historyResetDates"
+                    class="btn btn-outline-secondary w-100">
+                Reset
+            </button>
+        </div>
+    </div>
+
+    <div class="history-analytics-chart">
+        <canvas id="historyAnalyticsChart"></canvas>
+    </div>
+
+    <p id="historyAnalyticsMessage"
+       class="small text-secondary mt-3 mb-0"
+       aria-live="polite">
+        Analytics will appear when prediction history is available.
+    </p>
+</div>
+
+                    {% if history %}
+                   
+                    {% endif %}
+
+                </div>
+
+                {% if history %}
+
+                <div class="history-toolbar">
+                    <div class="history-search-wrap">
+                        <span class="history-search-icon">⌕</span>
+
+                        <input
+                            type="search"
+                            id="historySearch"
+                            class="form-control history-search"
+                            placeholder="Search model & measures !"
+                            aria-label="Search prediction history"
+                        >
+                    </div>
+
+                    <span id="historyCount" class="history-count">
+                        {{ history | length }} records
+                    </span>
+                </div>
+
+                <div class="row g-4" id="historyList">
+
+                    {% for item in history %}
+
+                    
+<div
+    class="col-12 history-entry"
+    data-search="{{ item.id }} {{ item.created_at }} {{ item.measurements.temperature }} {{ item.measurements.turbidity }} {{ item.measurements.tds }} {{ item.measurements.conductivity }} {{ item.measurements.dissolved_oxygen }} {% for model_name, ph in item.predictions.items() %}{{ model_name }} {{ ph }} {% endfor %}"
+    data-created="{{ item.created_at }}"
+    data-predictions='{{ item.predictions | tojson }}'
+>
+
+                        <div class="card border-0 rounded-4 history-card">
+
+                            <div class="card-body p-4">
+
+                                <div class="d-flex justify-content-between align-items-start flex-wrap gap-2 mb-3">
+
+                                    <div>
+                                        <h5 class="fw-bold mb-1">
+                                            Prediction #{{ item.id }}
+                                        </h5>
+
+                                        <small class="text-secondary">
+                                            {{ item.created_at }}
+                                        </small>
+                                    </div>
+
+                                    <span class="badge bg-primary-subtle text-primary">
+                                        Saved
+                                    </span>
+
+                                </div>
+
+                                <h6 class="fw-semibold mb-3">
+                                    Water Measurements
+                                </h6>
+
+                                <div class="row g-3 mb-4">
+
+                                    <div class="col-6 col-md-4 col-lg-2">
+                                        <small class="text-secondary">Temperature</small>
+                                        <div class="fw-semibold">
+                                            {{ item.measurements.temperature }} °C
+                                        </div>
+                                    </div>
+
+                                    <div class="col-6 col-md-4 col-lg-2">
+                                        <small class="text-secondary">Turbidity</small>
+                                        <div class="fw-semibold">
+                                            {{ item.measurements.turbidity }} NTU
+                                        </div>
+                                    </div>
+
+                                    <div class="col-6 col-md-4 col-lg-2">
+                                        <small class="text-secondary">TDS</small>
+                                        <div class="fw-semibold">
+                                            {{ item.measurements.tds }} mg/L
+                                        </div>
+                                    </div>
+
+                                    <div class="col-6 col-md-4 col-lg-2">
+                                        <small class="text-secondary">Conductivity</small>
+                                        <div class="fw-semibold">
+                                            {{ item.measurements.conductivity }} µS/cm
+                                        </div>
+                                    </div>
+
+                                    <div class="col-6 col-md-4 col-lg-2">
+                                        <small class="text-secondary">Dissolved Oxygen</small>
+                                        <div class="fw-semibold">
+                                            {{ item.measurements.dissolved_oxygen }} mg/L
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                                <h6 class="fw-semibold mb-3">
+                                    Predicted pH by Model
+                                </h6>
+
+                                <div class="row g-3">
+
+                                    {% for model_name, ph in item.predictions.items() %}
+
+                                    <div class="col-12 col-sm-6 col-lg-4">
+
+                                        <div class="p-3 rounded-3 border history-prediction">
+
+                                            <small class="text-secondary">
+                                                {{ model_name }}
+                                            </small>
+
+                                            <div class="fs-4 fw-bold">
+                                                {{ "%.2f"|format(ph) }}
+                                            </div>
+
+                                            <small class="text-secondary">
+                                                Predicted pH
+                                            </small>
+
+                                        </div>
+
+                                    </div>
+
+                                    {% endfor %}
+
+                                </div>
+
+                            </div>
+                        </div>
+
+                    </div>
+
+                    {% endfor %}
+
+                </div>
+
+                <div id="historyNoResults" class="panel empty-state mt-3" hidden>
+                    <div class="empty-state-icon">⌕</div>
+                    <h3>No matching records</h3>
+                    <p>Try another search term.</p>
+                </div>
+
+                {% else %}
+
+                <div class="panel empty-state">
+                    <div class="empty-state-icon">◷</div>
+                    <h3>No prediction history yet</h3>
+                    <p>
+                        Your saved predictions will appear here after you analyze a sample.
+                    </p>
+                    <a href="#analyzer" class="section-action">
+                        Go to Water Analyzer →
+                    </a>
+                </div>
+
+                {% endif %}
+                <div class="d-flex justify-content-end my-4">
+
+ <form
+                        action="{{ url_for('clear_history') }}"
+                        method="POST"
+                        onsubmit="return confirm('Are you sure you want to clear all prediction history?');"
+                    >
+                        <button type="submit" class="btn btn-outline-danger">
+                            Clear History
+                        </button>
+                    </form>
+
+            </section>
+
+            <!-- EDUCATIONAL DISCLAIMER -->
+            <div class="notice mt-4">
+                <strong>Educational use only:</strong>
+                Model predictions cannot determine whether water is safe to drink.
+                Confirm water quality through appropriate laboratory testing.
+            </div>
+
+            <!-- FOOTER -->
+            <footer class="footer">
+                <span>AquaSense AI</span>
+                <span>Water Quality Prediction</span>
+            </footer>
+
+        </main>
+    </div>
+</div>
+
+<!-- HISTORY SEARCH -->
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+    const searchInput = document.getElementById("historySearch");
+    const historyList = document.getElementById("historyList");
+    const countNode = document.getElementById("historyCount");
+    const noResults = document.getElementById("historyNoResults");
+
+    if (!searchInput || !historyList) return;
+
+    const entries = [...historyList.querySelectorAll(".history-entry")];
+
+    function searchHistory() {
+        const query = searchInput.value.trim().toLowerCase();
+        let visibleCount = 0;
+
+        entries.forEach(entry => {
+            const content = (
+                (entry.dataset.search || "") + " " + entry.textContent
+            ).toLowerCase();
+
+            const matches = content.includes(query);
+
+            entry.hidden = !matches;
+
+            if (matches) visibleCount++;
+        });
+
+        if (countNode) {
+            countNode.textContent =
+                visibleCount + (visibleCount === 1 ? " record" : " records");
+        }
+
+        if (noResults) {
+            noResults.hidden = visibleCount !== 0;
+        }
+    }
+
+    searchInput.addEventListener("input", searchHistory);
+});
+</script>
+
+<!-- SIDEBAR ACTIVE SECTION -->
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+    const links = [
+        ...document.querySelectorAll(".sidebar .nav-link-custom")
+    ];
+
+    const sections = links
+        .map(link => document.querySelector(link.getAttribute("href")))
+        .filter(Boolean);
+
+    function updateActiveLink() {
+        let activeSection = sections[0];
+
+        for (const section of sections) {
+            if (section.getBoundingClientRect().top <= 160) {
+                activeSection = section;
+            }
+        }
+
+        links.forEach(link => {
+            link.classList.toggle(
+                "active",
+                Boolean(activeSection) &&
+                link.getAttribute("href") === "#" + activeSection.id
+            );
+        });
+    }
+
+    window.addEventListener("scroll", updateActiveLink, {
+        passive: true
+    });
+
+    updateActiveLink();
+});
+</script>
+
+<!-- EXISTING INTERACTION SCRIPT -->
+<script src="{{ url_for('static', filename='script.js') }}"></script>
+
+</body>
+</html>
+

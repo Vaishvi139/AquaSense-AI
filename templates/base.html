@@ -1,0 +1,107 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#0b1730">
+
+    <title>{% block title %}AquaSense AI{% endblock %}</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+          rel="stylesheet">
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    {% block head %}{% endblock %}
+</head>
+
+<body>
+<div class="app-layout">
+
+    <aside class="sidebar">
+        <a href="{{ url_for('home') }}" class="brand">
+            <span class="brand-icon">💧</span>
+            <span>AquaSense <strong>AI</strong></span>
+        </a>
+      <p class="sidebar-caption">WORKSPACE</p>
+
+        <nav aria-label="Main navigation">
+            <a class="nav-link-custom {% if request.endpoint == 'home' %}active{% endif %}"
+               href="{{ url_for('home') }}">⌂ Dashboard</a>
+
+            <a class="nav-link-custom {% if request.endpoint == 'analyzer' %}active{% endif %}"
+               href="{{ url_for('analyzer') }}">◉ Water Analyzer</a>
+
+            <a class="nav-link-custom {% if request.endpoint == 'insights' %}active{% endif %}"
+               href="{{ url_for('insights') }}">✦ Water Insights</a>
+
+            <a class="nav-link-custom {% if request.endpoint == 'prediction_results' %}active{% endif %}"
+               href="{{ url_for('prediction_results') }}">▥ Predictions</a>
+
+            <a class="nav-link-custom {% if request.endpoint == 'model_performance' %}active{% endif %}"
+               href="{{ url_for('model_performance') }}">▤ Model Performance</a>
+
+            <a class="nav-link-custom {% if request.endpoint == 'feature_importance_page' %}active{% endif %}"
+               href="{{ url_for('feature_importance_page') }}">◈ Feature Importance</a>
+
+            <a class="nav-link-custom {% if request.endpoint == 'prediction_history_page' %}active{% endif %}"
+               href="{{ url_for('prediction_history_page') }}">◷ Prediction History</a>
+
+               <a href="{{ url_for('applications') }}" class="sidebar-link">
+              <span>Applications</span></a>
+        </nav>
+
+        <div class="sidebar-bottom">
+            <button type="button" id="themeToggle" class="theme-toggle">
+                🌙 Toggle theme
+            </button>
+        </div>
+    </aside>
+
+<main class="content-area">
+        
+<header class="topbar">
+    <div class="topbar-title-area">
+        <p class="topbar-eyebrow">AQUASENSE AI</p>
+        <h1 class="page-heading">
+            {% block page_heading %}Water Intelligence{% endblock %}
+        </h1>
+    </div>
+
+    {% set page_icons = {
+        'analyzer': '💧',
+        'insights': '🌊',
+        'prediction_results': '📈',
+        'model_performance': '🎯',
+        'feature_importance_page': '🔬',
+        'prediction_history_page': '🕒',
+        'applications': '🌍'
+    } %}
+
+    <div class="topbar-orbit-logo"
+         title="{{ self.page_heading()|striptags|trim }}">
+        <span class="orbit-ring orbit-ring-one"></span>
+        <span class="orbit-ring orbit-ring-two"></span>
+        <span class="topbar-page-icon">
+            {{ page_icons.get(request.endpoint, '💧') }}
+        </span>
+        <span class="orbit-satellite"></span>
+    </div>
+</header>
+
+        {% block content %}{% endblock %}
+
+        <footer class="app-footer">
+            <p>Your Water Quality Intelligence!</p>
+        </footer>
+    </main>
+
+</div>
+
+<script src="{{ url_for('static', filename='script.js') }}"></script>
+{% block scripts %}{% endblock %}
+</body>
+</html>

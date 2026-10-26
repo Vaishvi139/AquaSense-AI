@@ -1,0 +1,234 @@
+
+{% extends "base.html" %}
+
+{% block title %}Predictions | AquaSense AI{% endblock %}
+{% block page_heading %}Predictions & pH Gauge{% endblock %}
+
+{% block content %}
+
+<section class="section-block">
+    <div class="insights-hero">
+        <div>
+            <span class="insights-badge">✦ MACHINE LEARNING RESULTS</span>
+            <h2>Your Water. Predicted by AI.</h2>
+            <p>
+                Compare pH estimates from your trained regression models
+                and explore the pH scale with an interactive gauge.
+            </p>
+            <a href="{{ url_for('analyzer') }}" class="btn btn-primary mt-2">
+                Analyze New Sample
+            </a>
+        </div>
+        <div class="insights-hero-icon">📊</div>
+    </div>
+</section>
+
+{% if predictions %}
+<section class="section-block">
+    <div class="section-heading">
+        <div>
+            <p class="section-eyebrow">LATEST RESULTS</p>
+            <h2>Model Prediction Comparison</h2>
+            <p>Estimates from your most recent saved analysis.</p>
+        </div>
+    </div>
+
+    <div class="row g-3">
+        {% for model_name, ph in predictions.items() %}
+        <div class="col-12 col-md-6 col-xl-4">
+            <div class="insight-card">
+                <div class="insight-card-icon">🤖</div>
+                <p class="insight-label">{{ model_name }}</p>
+                <h3 class="insight-ph">{{ "%.2f"|format(ph|float) }}</h3>
+                <p class="insight-unit">Predicted pH</p>
+                <span class="insight-tag tag-neutral">Model estimate</span>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</section>
+
+<section class="section-block">
+    <div class="section-heading">
+        <div>
+            <p class="section-eyebrow">INTERACTIVE VISUALIZATION</p>
+            <h2>pH Gauge</h2>
+            <p>Select a model to explore its predicted pH value.</p>
+        </div>
+    </div>
+
+    <div class="panel ph-gauge-panel">
+        <div class="gauge-select-wrap">
+            <label for="modelSelect" class="form-label">Choose model</label>
+            <select id="modelSelect" class="form-select">
+                {% for model_name, ph in predictions.items() %}
+                <option value="{{ ph }}">{{ model_name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="gauge-container">
+            <canvas id="phGauge" aria-label="Predicted pH gauge"></canvas>
+            <div class="gauge-center">
+                <span id="gaugeValue">--</span>
+                <small>Predicted pH</small>
+            </div>
+        </div>
+
+        <div id="phInterpretation" class="gauge-interpretation">
+            Select a model to view its estimate.
+        </div>
+
+        <p class="insight-disclaimer mt-3 mb-0">
+            This gauge displays an ML estimate, not a laboratory measurement.
+            pH alone does not establish whether water is safe to drink.
+        </p>
+    </div>
+</section>
+
+<section class="section-block">
+    <div class="section-heading">
+        <div>
+            <p class="section-eyebrow">RESULT SUMMARY</p>
+            <h2>Prediction Summary</h2>
+        </div>
+    </div>
+
+    <div class="panel">
+        <p>
+            Each model estimates pH from the measurements supplied to the
+            Water Analyzer. Different algorithms can produce different
+            estimates because they learn patterns in the training data differently.
+        </p>
+        <a href="{{ url_for('prediction_history_page') }}"
+           class="btn btn-outline-primary">
+            View Prediction History
+        </a>
+    </div>
+</section>
+
+{% else %}
+<section class="section-block">
+    <div class="panel empty-insights">
+        <div class="empty-insights-icon">📈</div>
+        <h2>No predictions available yet</h2>
+        <p>
+            Analyze a water sample first. Your latest model predictions
+            and the interactive gauge will appear here.
+        </p>
+        <a href="{{ url_for('analyzer') }}" class="btn btn-primary">
+            Start Water Analysis
+        </a>
+    </div>
+</section>
+{% endif %}
+
+{% endblock %}
+
+{% block scripts %}
+{% if predictions %}
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const select = document.getElementById("modelSelect");
+    const valueDisplay = document.getElementById("gaugeValue");
+    const interpretation = document.getElementById("phInterpretation");
+    const canvas = document.getElementById("phGauge");
+
+    if (!select || !canvas || typeof Chart === "undefined") {
+        return;
+    }
+
+    const ctx = canvas.getContext("2d");
+
+    const gauge = new Chart(ctx, {
+        type: "doughnut",
+        data: {
+            labels: ["Acidic", "Neutral", "Alkaline"],
+            datasets: [{
+                data: [7, 1, 6],
+                backgroundColor: ["#ed8065", "#43c59e", "#5688ef"],
+                borderWidth: 0,
+                hoverOffset: 5,
+                circumference: 180,
+                rotation: 270,
+                cutout: "78%"
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: true,
+            aspectRatio: 1.8,
+            plugins: {
+                legend: { display: false },
+                tooltip: { enabled: false }
+            },
+            animation: {
+                duration: 700
+            }
+        },
+        plugins: [{
+            id: "phNeedle",
+            afterDatasetDraw(chart) {
+                const value = Number(select.value);
+                if (!Number.isFinite(value)) return;
+
+                const clamped = Math.max(0, Math.min(14, value));
+                const meta = chart.getDatasetMeta(0);
+                const arc = meta.data[0];
+                if (!arc) return;
+
+                const { x, y } = arc;
+                const radius = arc.outerRadius * 0.82;
+                const angle = Math.PI + (clamped / 14) * Math.PI;
+                const endX = x + Math.cos(angle) * radius;
+                const endY = y + Math.sin(angle) * radius;
+
+                const context = chart.ctx;
+                context.save();
+                context.beginPath();
+                context.moveTo(x, y);
+                context.lineTo(endX, endY);
+                context.lineWidth = 4;
+                context.lineCap = "round";
+                context.strokeStyle = "#102d4c";
+                context.stroke();
+
+                context.beginPath();
+                context.arc(x, y, 7, 0, Math.PI * 2);
+                context.fillStyle = "#102d4c";
+                context.fill();
+                context.restore();
+            }
+        }]
+    });
+
+    function updateGauge() {
+        const value = Number(select.value);
+
+        if (!Number.isFinite(value)) return;
+
+        valueDisplay.textContent = value.toFixed(2);
+
+        if (value < 0 || value > 14) {
+            interpretation.textContent =
+                "Outside the usual 0–14 pH scale. Check the model and input data.";
+        } else if (value < 7) {
+            interpretation.textContent =
+                "Acidic estimate — below pH 7.";
+        } else if (value > 7) {
+            interpretation.textContent =
+                "Alkaline estimate — above pH 7.";
+        } else {
+            interpretation.textContent =
+                "Neutral estimate — pH 7.";
+        }
+
+        gauge.update();
+    }
+
+    select.addEventListener("change", updateGauge);
+    updateGauge();
+});
+</script>
+{% endif %}
+{% endblock %}

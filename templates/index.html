@@ -1,0 +1,130 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard | AquaSense AI{% endblock %}
+{% block page_heading %}Water Intelligence{% endblock %}
+
+{% block content %}
+<div class="aqua-dashboard">
+
+    <!-- HERO -->
+    <section class="aqua-hero">
+        <div class="aqua-hero-copy">
+            <span class="aqua-badge">💧 WATER INTELLIGENCE</span>
+
+            <h2>
+                Understand Your Water.<br>
+                <span>Make Smarter Decisions!</span>
+            </h2>
+
+            <p>
+                Analyze water measurements, estimate pH using machine learning,
+                compare model performance and explore your prediction history.
+            </p>
+
+            <div class="hero-actions">
+                <a href="{{ url_for('analyzer') }}" class="aqua-button">
+                    Start Water Analysis  →
+                </a>
+            </div>
+        </div>
+
+        <!-- Animated circular water logo -->
+        <div class="aqua-visual">
+            <div class="aqua-orbit orbit-a"></div>
+            <div class="aqua-orbit orbit-b"></div>
+            <div class="aqua-orbit orbit-c"></div>
+
+            <div class="aqua-logo-circle">
+                <div class="aqua-logo-shine"></div>
+                <span class="aqua-logo-drop">💧</span>
+                <strong>AquaSense</strong>
+                <small>WATER INTELLIGENCE</small>
+            </div>
+
+            <div class="aqua-float aqua-float-top">
+                <span class="float-icon">⌁</span>
+                <div>
+                    <small>AI ANALYSIS</small>
+                    <strong>3 Models</strong>
+                </div>
+                <span class="live-dot">●</span>
+            </div>
+
+            <div class="aqua-float aqua-float-bottom">
+                <span class="float-icon">◉</span>
+                <div>
+                    <small>PH MONITORING</small>
+                    <strong>0 – 14 Scale</strong>
+                </div>
+            </div>
+
+            <div class="aqua-visual-caption">
+                <span>●</span> Explore your water data
+            </div>
+        </div>
+    </section>
+
+    <!-- WORKSPACE -->
+    <section class="aqua-workspace">
+        <div class="aqua-section-heading">
+            <div>
+                <span>YOUR WORKSPACE</span>
+                <h2>Explore AquaSense AI</h2>
+                <p>Choose a tool to continue your water quality analysis.</p>
+            </div>
+        </div>
+
+        <div class="aqua-card-grid">
+
+            <a class="aqua-feature-card" href="{{ url_for('analyzer') }}">
+                <div class="aqua-card-icon icon-cyan">⚗</div>
+                <span class="aqua-card-arrow">↗</span>
+                <h3>Water Analyzer</h3>
+                <p>Enter temperature, turbidity, TDS, conductivity, and dissolved oxygen to predict pH.</p>
+                <strong>Analyze water →</strong>
+            </a>
+
+            <a class="aqua-feature-card" href="{{ url_for('insights') }}">
+                <div class="aqua-card-icon icon-blue">≈</div>
+                <span class="aqua-card-arrow">↗</span>
+                <h3>Water Insights</h3>
+                <p>Explore the latest results and understand what estimated pH may indicate.</p>
+                <strong>Explore insights →</strong>
+            </a>
+
+            <a class="aqua-feature-card" href="{{ url_for('prediction_results') }}">
+                <div class="aqua-card-icon icon-purple">◎</div>
+                <span class="aqua-card-arrow">↗</span>
+                <h3>Predictions &amp; pH Gauge</h3>
+                <p>Review model predictions and view the pH visualization.</p>
+                <strong>View predictions →</strong>
+            </a>
+
+            <a class="aqua-feature-card" href="{{ url_for('model_performance') }}">
+                <div class="aqua-card-icon icon-orange">▥</div>
+                <span class="aqua-card-arrow">↗</span>
+                <h3>Model Performance</h3>
+                <p>Compare regression models using MAE, RMSE, and R² metrics.</p>
+                <strong>Compare models →</strong>
+            </a>
+
+            <a class="aqua-feature-card" href="{{ url_for('feature_importance_page') }}">
+                <div class="aqua-card-icon icon-green">⌘</div>
+                <span class="aqua-card-arrow">↗</span>
+                <h3>Feature Importance</h3>
+                <p>Explore which input measurements influence supported model predictions.</p>
+                <strong>Explore features →</strong>
+            </a>
+
+            <a class="aqua-feature-card" href="{{ url_for('prediction_history_page') }}">
+                <div class="aqua-card-icon icon-pink">◷</div>
+                <span class="aqua-card-arrow">↗</span>
+                <h3>Prediction History</h3>
+                <p>Review previously saved predictions and access your history tools.</p>
+                <strong>View history →</strong>
+            </a>
+
+        </div>
+    </section>
+</div>
+{% endblock %}

@@ -1,0 +1,411 @@
+
+{% extends "base.html" %}
+
+{% block title %}Feature Importance | AquaSense AI{% endblock %}
+{% block page_heading %}Feature Importance{% endblock %}
+
+{% block content %}
+<section class="importance-hero">
+    <div>
+        <span class="importance-tag">MODEL EXPLAINABILITY</span>
+        <h2>What influences water quality predictions?</h2>
+        <p>
+            Explore which input measurements contribute most to your
+            machine learning model's predictions.
+        </p>
+    </div>
+    <div class="importance-hero-icon">🔬</div>
+</section>
+
+<section class="importance-stats">
+    <div class="importance-stat-card">
+        <span>🧪</span>
+        <p>Input Features</p>
+        <h3 id="featureCount">5</h3>
+    </div>
+
+    <div class="importance-stat-card">
+        <span>📊</span>
+        <p>Available Models</p>
+        <h3 id="modelCount">--</h3>
+    </div>
+
+    <div class="importance-stat-card">
+        <span>💧</span>
+        <p>Prediction Target</p>
+        <h3>pH</h3>
+    </div>
+</section>
+
+<section class="importance-panel">
+    <div class="importance-panel-heading">
+        <div>
+            <h3>Feature Importance Analysis</h3>
+            <p>Compare importance scores where the model provides them.</p>
+        </div>
+
+        <select id="modelSelector" class="form-select importance-select"
+                aria-label="Choose model">
+            <option value="0">First available model</option>
+        </select>
+    </div>
+
+    <div id="importanceChartArea" class="importance-chart-area">
+        <canvas id="importanceChart"></canvas>
+    </div>
+
+    <p id="importanceMessage" class="importance-message"></p>
+</section>
+
+
+<!-- FEATURE IMPORTANCE THEORY -->
+
+<section class="feature-theory-section">
+
+    <div class="feature-theory-heading">
+        <p class="feature-theory-eyebrow">LEARN THE CONCEPT</p>
+        <h2>Understanding Feature Importance</h2>
+    </div>
+
+    <!-- Why Feature Importance Matters -->
+    <div class="feature-theory-card">
+        <h3>Why Is Feature Importance Important?</h3>
+        <p>
+            Machine learning models learn patterns from training data.
+            Feature importance helps us interpret those patterns and understand
+            which input variables contribute most according to a particular
+            model and importance calculation method.
+        </p>
+
+        <ul>
+            <li>Helps interpret model behaviour.</li>
+            <li>Identifies features the model relies on most.</li>
+            <li>Supports comparison and evaluation of model inputs.</li>
+            <li>Helps guide further investigation and model improvement.</li>
+            <li>Makes machine learning results easier to explain in presentations.</li>
+        </ul>
+    </div>
+
+    <!-- Water Quality Parameters -->
+    <div class="feature-theory-card">
+        <h3>Importance of Water Quality Parameters</h3>
+        <p>
+            AquaSense AI uses five input parameters to predict pH.
+            Each parameter describes a different characteristic of water.
+        </p>
+
+        <div class="feature-parameter-grid">
+
+            <div class="feature-parameter-card">
+                <span class="feature-detail-icon">🌡️</span>
+                <h4>Temperature</h4>
+                <p>
+                    Water temperature, recorded in °C.
+                    Measures how warm or cold the water is.
+                    Temperature can affect water chemistry and pH measurements.
+                </p>
+            </div>
+
+            <div class="feature-parameter-card">
+                 <span class="feature-detail-icon">🌫️</span>
+                <h4>Turbidity</h4>
+                <p>
+                    A measure of how cloudy the water is.
+                    Indicates water cloudiness caused by suspended particles.
+                    It provides information about the physical condition of water.
+                </p>
+            </div>
+
+            <div class="feature-parameter-card">
+                <span class="feature-detail-icon">🧂</span>
+                <h4>Total Dissolved Solids (TDS)</h4>
+                <p>
+                    Total dissolved solids, commonly measured in mg/L.
+                    Represents the concentration of dissolved substances in water.
+                    It helps describe the water's chemical composition.
+                </p>
+            </div>
+
+            <div class="feature-parameter-card">
+                <span class="feature-detail-icon">⚡</span>
+                <h4>Electrical Conductivity</h4>
+                <p>
+                    Indicates the water's ability to conduct electricity.
+                    Measures how readily water conducts electricity.
+                    It is often related to the concentration of dissolved ions.
+                </p>
+            </div>
+
+            <div class="feature-parameter-card">
+                <span class="feature-detail-icon">🫧</span>
+                <h4>Dissolved Oxygen</h4>
+                <p>
+                    The amount of oxygen dissolved in the water.
+                    Measures the oxygen dissolved in water.
+                    It is an important indicator of aquatic environmental conditions.
+                </p>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Reading the Chart -->
+    <div class="feature-theory-card">
+        <h3>How to Interpret the Feature Importance Chart</h3>
+
+        <ul>
+            <li>
+                A higher score indicates greater importance according to
+                the method used to calculate that score.
+            </li>
+            <li>
+                A lower score indicates less importance under that same method.
+            </li>
+            <li>
+                Importance scores do not automatically show whether a parameter
+                increases or decreases predicted pH.
+            </li>
+            <li>
+                Importance does not prove that a parameter causes a change in pH.
+            </li>
+        </ul>
+
+        <p>
+            <strong>Note:</strong> Feature importance depends on the model
+            and calculation method. Scores from different methods should not
+            automatically be treated as directly comparable.
+        </p>
+    </div>
+
+    <!-- Project-Specific Note -->
+    <div class="feature-theory-card feature-theory-note">
+        <h3>Role in AquaSense AI</h3>
+        <p>
+            In AquaSense AI, feature importance provides additional insight
+            into the water-quality parameters used by the trained prediction
+            model. It complements the predicted pH values and model performance
+            metrics, helping users better understand the analysis.
+        </p>
+        <p>
+            Feature importance is an interpretation aid, not a water-safety
+            test. Drinking-water safety requires appropriate laboratory testing.
+        </p>
+    </div>
+
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script id="featureImportanceData" type="application/json">
+    {{ feature_importance | default({}) | tojson }}
+</script>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const rawData = JSON.parse(document.getElementById("featureImportanceData").textContent);
+    const selector = document.getElementById("modelSelector");
+    const message = document.getElementById("importanceMessage");
+    const chartCanvas = document.getElementById("importanceChart");
+
+    const knownFeatures = [
+        "temperature",
+        "turbidity",
+        "tds",
+        "conductivity",
+        "dissolved_oxygen"
+    ];
+
+    function makeFeatureList(data) {
+        if (Array.isArray(data)) {
+            return data.map(function (item) {
+                if (typeof item === "number") return null;
+                if (!item || typeof item !== "object") return null;
+
+                const name = item.feature || item.name || item.feature_name;
+                const score = Number(
+                    item.importance ?? item.score ?? item.value
+                );
+
+                if (!name || !Number.isFinite(score)) return null;
+
+                return { name: name, score: score };
+            }).filter(Boolean);
+        }
+
+        if (data && typeof data === "object") {
+            return Object.entries(data).map(function ([name, value]) {
+                if (typeof value === "number") {
+                    return { name: name, score: value };
+                }
+
+                if (value && typeof value === "object") {
+                    const score = Number(
+                        value.importance ?? value.score ?? value.value
+                    );
+
+                    if (Number.isFinite(score)) {
+                        return { name: name, score: score };
+                    }
+                }
+
+                return null;
+            }).filter(Boolean);
+        }
+
+        return [];
+    }
+
+    function isFeatureScoreObject(data) {
+        if (!data || typeof data !== "object" || Array.isArray(data)) {
+            return false;
+        }
+
+        return Object.values(data).some(function (value) {
+            return typeof value === "number" ||
+                (value && typeof value === "object" &&
+                 ("importance" in value || "score" in value || "value" in value));
+        });
+    }
+
+    const modelEntries = [];
+
+    if (Array.isArray(rawData)) {
+        const isSingleFeatureList = rawData.some(function (item) {
+            return item && typeof item === "object" &&
+                ("feature" in item || "feature_name" in item);
+        });
+
+        if (isSingleFeatureList) {
+            modelEntries.push(["Feature Importance", rawData]);
+        } else {
+            rawData.forEach(function (item, index) {
+                if (item && typeof item === "object") {
+                    const name = item.model || item.model_name ||
+                        item.name || ("Model " + (index + 1));
+
+                    const values = item.importances || item.features || item.values;
+                    if (values) modelEntries.push([name, values]);
+                }
+            });
+        }
+    } else if (rawData && typeof rawData === "object") {
+        if (isFeatureScoreObject(rawData)) {
+            modelEntries.push(["Feature Importance", rawData]);
+        } else {
+            Object.entries(rawData).forEach(function ([name, values]) {
+                if (isFeatureScoreObject(values) || Array.isArray(values)) {
+                    modelEntries.push([name, values]);
+                }
+            });
+        }
+    }
+
+    const preparedModels = modelEntries.map(function ([name, values]) {
+        return {
+            name: name,
+            features: makeFeatureList(values)
+                .sort(function (a, b) {
+                    return b.score - a.score;
+                })
+        };
+    }).filter(function (model) {
+        return model.features.length > 0;
+    });
+
+    document.getElementById("modelCount").textContent = preparedModels.length;
+    document.getElementById("featureCount").textContent = knownFeatures.length;
+
+    selector.innerHTML = "";
+
+    preparedModels.forEach(function (model, index) {
+        const option = document.createElement("option");
+        option.value = index;
+        option.textContent = model.name;
+        selector.appendChild(option);
+    });
+
+    let importanceChart = null;
+
+    function renderChart() {
+        if (importanceChart) {
+            importanceChart.destroy();
+            importanceChart = null;
+        }
+
+        if (!preparedModels.length) {
+            message.textContent =
+                "No usable feature-importance scores were found. Check models/feature_importance.json and its structure.";
+            chartCanvas.style.display = "none";
+            return;
+        }
+
+        if (typeof Chart === "undefined") {
+            message.textContent =
+                "Chart.js could not load. Check your internet connection and refresh.";
+            return;
+        }
+
+        chartCanvas.style.display = "block";
+        message.textContent = "";
+
+        const model = preparedModels[Number(selector.value)];
+        if (!model) return;
+
+        const features = model.features;
+
+        importanceChart = new Chart(chartCanvas, {
+            type: "bar",
+            data: {
+                labels: features.map(function (item) {
+                    return item.name.replaceAll("_", " ");
+                }),
+                datasets: [{
+                    label: "Importance score",
+                    data: features.map(function (item) {
+                        return item.score;
+                    }),
+                    backgroundColor: [
+                        "#22c1a6",
+                        "#6588f5",
+                        "#9b7bf5",
+                        "#f5b84b",
+                        "#ed7a91"
+                    ],
+                    borderRadius: 8,
+                    barThickness: "flex",
+                    maxBarThickness: 36
+                }]
+            },
+            options: {
+                indexAxis: "y",
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    x: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: "Importance score"
+                        }
+                    }
+                },
+                plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                        callbacks: {
+                            label: function (context) {
+                                return "Score: " +
+                                    Number(context.raw).toFixed(4);
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+    selector.addEventListener("change", renderChart);
+    renderChart();
+});
+</script>
+
+{% endblock %}

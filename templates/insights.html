@@ -1,0 +1,222 @@
+
+{% extends "base.html" %}
+
+{% block title %}Water Insights | AquaSense AI{% endblock %}
+{% block page_heading %}Water Insights{% endblock %}
+
+{% block content %}
+
+<section class="section-block">
+    <div class="insights-hero">
+        <div>
+            <span class="insights-badge">✦ WATER INTELLIGENCE</span>
+            <h2>Understand Your Water Quality</h2>
+            <p>
+                Explore your latest predicted pH, understand the pH scale,
+                and review your recent water analysis activity.
+            </p>
+            <a href="{{ url_for('analyzer') }}"
+               class="btn btn-primary mt-2">
+               Analyze New Sample +
+            </a>
+        </div>
+        <div class="insights-hero-icon">💧</div>
+    </div>
+</section>
+
+<!-- Latest prediction -->
+<section class="section-block">
+    <div class="section-heading">
+        <div>
+            <p class="section-eyebrow">LATEST ANALYSIS</p>
+            <h2>Your Latest Water Insights</h2>
+            <p>Based on your most recently saved prediction.</p>
+        </div>
+    </div>
+
+    {% if latest and latest.predictions %}
+        <div class="row g-3">
+            {% for model_name, ph in latest.predictions.items() %}
+                {% set ph_value = ph|float %}
+                <div class="col-12 col-md-6 col-xl-4">
+                    <div class="insight-card">
+                        <div class="insight-card-icon">🧪</div>
+                        <p class="insight-label">{{ model_name }}</p>
+                        <h3 class="insight-ph">
+                            {{ "%.2f"|format(ph_value) }}
+                        </h3>
+                        <p class="insight-unit">Predicted pH</p>
+
+                        {% if ph_value < 0 or ph_value > 14 %}
+                            <span class="insight-tag tag-unknown">
+                                Outside usual pH scale
+                            </span>
+                        {% elif ph_value < 7 %}
+                            <span class="insight-tag tag-acidic">
+                                Acidic estimate
+                            </span>
+                        {% elif ph_value > 7 %}
+                            <span class="insight-tag tag-alkaline">
+                                Alkaline estimate
+                            </span>
+                        {% else %}
+                            <span class="insight-tag tag-neutral">
+                                Neutral estimate
+                            </span>
+                        {% endif %}
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+
+        <div class="panel mt-3">
+            <h3>What does this mean?</h3>
+            <p>
+                The pH scale describes how acidic or alkaline water is.
+                A pH below 7 is acidic, 7 is neutral, and above 7 is alkaline
+                under typical reference conditions.
+            </p>
+        </div>
+    {% else %}
+        <div class="panel empty-insights">
+            <div class="empty-insights-icon">📊</div>
+            <h3>No predictions yet</h3>
+            <p>
+                Submit water measurements in the Water Analyzer to see
+                your first pH insights here.
+            </p>
+            <a href="{{ url_for('analyzer') }}"
+               class="btn btn-primary">
+                Start Water Analysis
+            </a>
+        </div>
+    {% endif %}
+</section>
+
+<!-- pH scale -->
+<section class="section-block">
+    <div class="section-heading">
+        <div>
+            <p class="section-eyebrow">LEARN THE SCALE</p>
+            <h2>Understanding the pH Scale</h2>
+            <p>A simple guide to interpreting pH values.</p>
+        </div>
+    </div>
+
+    <div class="panel">
+        <div class="ph-scale">
+            <div class="ph-scale-labels">
+                <span>Acidic</span>
+                <span>Neutral</span>
+                <span>Alkaline</span>
+            </div>
+
+            <div class="ph-gradient"></div>
+
+            <div class="ph-scale-numbers">
+                {% for n in range(15) %}
+                    <span>{{ n }}</span>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="row g-3 mt-3">
+            <div class="col-12 col-md-4">
+                <div class="scale-info scale-acid">
+                    <h3>Below 7</h3>
+                    <p>Acidic</p>
+                    <small>Lower pH values indicate greater acidity.</small>
+                </div>
+            </div>
+
+            <div class="col-12 col-md-4">
+                <div class="scale-info scale-neutral">
+                    <h3>Exactly 7</h3>
+                    <p>Neutral</p>
+                    <small>Pure water is approximately neutral at 25°C.</small>
+                </div>
+            </div>
+
+            <div class="col-12 col-md-4">
+                <div class="scale-info scale-alkaline">
+                    <h3>Above 7</h3>
+                    <p>Alkaline</p>
+                    <small>Higher pH values indicate greater alkalinity.</small>
+                </div>
+            </div>
+        </div>
+
+        <p class="insight-disclaimer mt-3 mb-0">
+            Note: pH alone cannot establish whether water is safe to drink.
+            Use appropriate laboratory testing for drinking-water safety.
+        </p>
+    </div>
+</section>
+
+<!-- Recent activity -->
+<section class="section-block">
+    <div class="section-heading">
+        <div>
+            <p class="section-eyebrow">RECENT ACTIVITY</p>
+            <h2>Recent Analysis History</h2>
+            <p>Your latest saved prediction records.</p>
+        </div>
+
+        <a href="{{ url_for('prediction_history_page') }}"
+           class="btn btn-outline-primary">
+            View Full History
+        </a>
+    </div>
+
+    {% if history %}
+        <div class="panel table-responsive">
+            <table class="table align-middle">
+                <thead>
+                    <tr>
+                        <th>Analysis Date</th>
+                        <th>Model</th>
+                        <th>Predicted pH</th>
+                        <th>Interpretation</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for record in history[:5] %}
+                        {% if record.predictions %}
+                            {% for model_name, ph in record.predictions.items() %}
+                                {% set ph_value = ph|float %}
+                                <tr>
+                                    <td>{{ record.created_at }}</td>
+                                    <td>{{ model_name }}</td>
+                                    <td>
+                                        <strong>
+                                            {{ "%.2f"|format(ph_value) }}
+                                        </strong>
+                                    </td>
+                                    <td>
+                                        {% if ph_value < 0 or ph_value > 14 %}
+                                            Outside usual scale
+                                        {% elif ph_value < 7 %}
+                                            Acidic estimate
+                                        {% elif ph_value > 7 %}
+                                            Alkaline estimate
+                                        {% else %}
+                                            Neutral estimate
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        {% endif %}
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% else %}
+        <div class="panel">
+            <p class="mb-0">
+                Your saved analysis records will appear here after your first prediction.
+            </p>
+        </div>
+    {% endif %}
+</section>
+
+{% endblock %}

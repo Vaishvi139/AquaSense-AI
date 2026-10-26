@@ -1,0 +1,23 @@
+{
+  "linear_regression": {
+    "temperature": 0.008,
+    "turbidity": 0.0454,
+    "tds": 0.0013,
+    "conductivity": 0.0006,
+    "dissolved_oxygen": 0.9447
+  },
+  "random_forest_regression": {
+    "temperature": 0.1811,
+    "turbidity": 0.1763,
+    "tds": 0.1693,
+    "conductivity": 0.1703,
+    "dissolved_oxygen": 0.303
+  },
+  "histgradientboostingregressor": {
+    "temperature": 0.0,
+    "turbidity": 0.0,
+    "tds": 0.0,
+    "conductivity": 0.0,
+    "dissolved_oxygen": 0.0
+  }
+}

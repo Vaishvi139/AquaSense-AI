@@ -1,0 +1,217 @@
+
+{% extends "base.html" %}
+
+{% block title %}Applications | AquaSense AI{% endblock %}
+{% block page_heading %}Applications{% endblock %}
+
+{% block content %}
+
+<section class="section-block applications-page">
+
+    <!-- HERO SECTION -->
+    <div class="applications-hero">
+
+        <div class="applications-hero-text">
+            <p class="applications-eyebrow">REAL-WORLD APPLICATIONS</p>
+
+            <h2>Where Water Intelligence Meets Machine Learning</h2>
+
+            <p>
+                AquaSense AI demonstrates how machine learning can analyze
+                water-quality data, estimate pH, compare prediction models,
+                and support educational water-quality investigations.
+            </p>
+
+            <a href="{{ url_for('model_performance') }}"
+               class="applications-button">
+                Explore Model Performance
+            </a>
+        </div>
+
+        <div class="applications-visual" aria-label="Animated water and nature illustration">
+            <div class="orbit orbit-one"></div>
+            <div class="orbit orbit-two"></div>
+            <div class="applications-water-drop">💧</div>
+            <span class="floating-icon floating-leaf">🌿</span>
+            <span class="floating-icon floating-wave">🌊</span>
+            <span class="floating-icon floating-sparkle">✨</span>
+            <span class="floating-icon floating-chart">📊</span>
+        </div>
+
+    </div>
+
+    <!-- APPLICATIONS -->
+    <div class="applications-section-heading">
+        <h2>Applications of AquaSense AI</h2>
+        <p class="applications-eyebrow">WHERE IT CAN BE USED ?</p>
+    </div>
+
+    <div class="applications-grid">
+
+        <article class="application-card">
+            <div class="application-icon">🌍</div>
+            <h3>Environmental Monitoring</h3>
+            <p>
+                Explore water-quality measurements collected from
+                environmental sampling activities and investigate patterns
+                in predicted pH.
+            </p>
+            <span class="application-tag">Environmental Data</span>
+        </article>
+
+        <article class="application-card">
+            <div class="application-icon">💧</div>
+            <h3>Preliminary Water Analysis</h3>
+            <p>
+                Generate preliminary model-based pH estimates from temperature,
+                turbidity, TDS, conductivity, and dissolved oxygen readings.
+            </p>
+            <span class="application-tag">pH Estimation</span>
+        </article>
+
+        <article class="application-card">
+            <div class="application-icon">🔬</div>
+            <h3>Water Quality Research</h3>
+            <p>
+                Support educational investigations into water-quality datasets
+                and explore relationships between measured parameters and
+                predicted pH.
+            </p>
+            <span class="application-tag">Research Support</span>
+        </article>
+
+        <article class="application-card">
+            <div class="application-icon">🎓</div>
+            <h3>Education and Learning</h3>
+            <p>
+                Demonstrate regression algorithms, model evaluation,
+                feature importance, data visualization, and the use of
+                machine learning in environmental studies.
+            </p>
+            <span class="application-tag">ML Education</span>
+        </article>
+
+    </div>
+
+    <!-- USES AND BENEFITS -->
+    <div class="applications-section-heading">
+        <p class="applications-eyebrow">PROJECT BENEFITS</p>
+        <h2>Uses and Benefits</h2>
+    </div>
+
+    <div class="applications-benefits-card">
+
+        <div class="benefit-row">
+            <div class="benefit-icon">⚡</div>
+            <div>
+                <h3>Quick Model-Based Estimates</h3>
+            </div>
+        </div>
+
+        <div class="benefit-row">
+            <div class="benefit-icon">🤖</div>
+            <div>
+                <h3>Comparison of Three ML Algorithms</h3>
+            </div>
+        </div>
+
+        <div class="benefit-row">
+            <div class="benefit-icon">📈</div>
+            <div>
+                <h3>Performance Visualization</h3>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- LIMITATIONS -->
+    <div class="applications-section-heading">
+        <p class="applications-eyebrow">RESPONSIBLE USE</p>
+        <h2>Limitations to Understand</h2>
+    </div>
+
+    <div class="applications-limitations">
+
+        <div class="limitation-icon">⚠️</div>
+
+        <div>
+            <h3>Predictions Depend on Training Data : The model's accuracy depends on the quality, size,
+                and representativeness of its training dataset. Results
+                may be less reliable for samples unlike the training data.</h3>
+
+            <h3>pH Prediction Is Not a Safety Certification :  AquaSense AI estimates pH; it does not test for all
+                harmful microorganisms, chemicals, or contaminants.
+                A prediction cannot establish that water is safe to drink.
+                Appropriate laboratory testing is necessary to assess
+                drinking-water safety.</h3>
+        </div>
+
+    </div>
+
+    <!-- FUTURE SCOPE -->
+    <div class="applications-section-heading">
+        <h2>Future Scope</h2>
+         <p class="applications-eyebrow">WHAT COMES NEXT ?</p>
+    </div>
+
+    <div class="future-scope-grid">
+
+        <div class="future-scope-card">
+            <span>🧪</span>
+            <h3>Additional Water Parameters</h3>
+            <p>
+                Investigate additional measurements and water-quality
+                indicators where suitable data is available.
+            </p>
+        </div>
+
+        <div class="future-scope-card">
+            <span>🗂️</span>
+            <h3>Better Training Datasets</h3>
+            <p>
+                Use larger, diverse, well-documented datasets and evaluate
+                performance on unseen samples.
+            </p>
+        </div>
+
+        <div class="future-scope-card">
+            <span>📡</span>
+            <h3>Real-Time Sensors</h3>
+            <p>
+                Explore integrating compatible sensors to collect
+                measurements automatically in a future version.
+            </p>
+        </div>
+
+        <div class="future-scope-card">
+            <span>🧠</span>
+            <h3>Model Explainability</h3>
+            <p>
+                Add methods that explain individual predictions and
+                investigate how input values influence model outputs.
+            </p>
+        </div>
+
+    </div>
+
+    <!-- FINAL MESSAGE -->
+    <div class="applications-conclusion">
+        <div class="conclusion-water-icon">💧</div>
+        <h2>Turning Water Data into Insight</h2>
+        <p>
+            AquaSense AI brings together water-quality inputs, machine
+            learning predictions, performance evaluation, and feature
+            interpretation in one educational dashboard.
+        </p>
+    </div>
+
+    <!-- EDUCATIONAL DISCLAIMER -->
+    <div class="applications-disclaimer">
+        <strong>Educational use only:</strong>
+        Model predictions do not establish whether water is safe to drink.
+        Appropriate laboratory testing is required.
+    </div>
+
+</section>
+
+{% endblock %}

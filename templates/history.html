@@ -1,0 +1,156 @@
+
+{% extends "base.html" %}
+
+{% block title %}Prediction History | AquaSense AI{% endblock %}
+{% block page_heading %}Prediction History{% endblock %}
+
+{% block content %}
+<section class="history-hero">
+    <div>
+        <span class="history-tag">YOUR ANALYSIS RECORDS</span>
+        <h2>Prediction History</h2>
+        <p>Review previous water quality analyses and their predicted pH values.</p>
+    </div>
+    <div class="history-hero-icon">🕘</div>
+</section>
+
+<section class="history-stats">
+    <div class="history-stat-card">
+        <span>📚</span>
+        <p>Total Records Shown</p>
+        <h3>{{ history|length }}</h3>
+    </div>
+
+    <div class="history-stat-card">
+        <span>🧪</span>
+        <p>Latest Analysis</p>
+        <h3>
+            {% if history %}
+                {{ history[0].created_at }}
+            {% else %}
+                —
+            {% endif %}
+        </h3>
+    </div>
+</section>
+
+<section class="history-panel">
+    <div class="history-panel-heading">
+        <div>
+            <h3>Previous Predictions</h3>
+            <p>Your most recent saved analyses appear first.</p>
+        </div>
+
+        {% if history %}
+        <form method="POST" action="{{ url_for('download_report') }}">
+            <button type="submit" class="history-download-btn">
+                ⬇ Download Latest Report
+            </button>
+        </form>
+        {% endif %}
+    </div>
+
+    {% if history %}
+    <div class="history-table-wrapper">
+        <table class="history-table">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Date & Time</th>
+                    <th>Input Measurements</th>
+                    <th>Model Predictions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for record in history %}
+                <tr>
+                    <td>{{ loop.index }}</td>
+                    <td class="history-date">
+                        {{ record.created_at }}
+                    </td>
+                    <td>
+                        {% if record.measurements %}
+                            {% for key, value in record.measurements.items() %}
+                            <div class="history-value">
+                                <span>{{ key.replace('_', ' ')|title }}</span>
+                                <strong>{{ value }}</strong>
+                            </div>
+                            {% endfor %}
+                        {% else %}
+                            <span class="history-muted">No measurements saved</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if record.predictions %}
+                            {% for model_name, prediction in record.predictions.items() %}
+                            <div class="history-prediction">
+                                <span>{{ model_name }}</span>
+                                <strong>{{ prediction }}</strong>
+                            </div>
+                            {% endfor %}
+                        {% else %}
+                            <span class="history-muted">No predictions saved</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <div class="history-mobile-list">
+        {% for record in history %}
+        <article class="history-record-card">
+            <div class="history-record-heading">
+                <strong>Analysis #{{ loop.index }}</strong>
+                <span>{{ record.created_at }}</span>
+            </div>
+
+            <h4>Input Measurements</h4>
+            {% if record.measurements %}
+                {% for key, value in record.measurements.items() %}
+                <div class="history-value">
+                    <span>{{ key.replace('_', ' ')|title }}</span>
+                    <strong>{{ value }}</strong>
+                </div>
+                {% endfor %}
+            {% endif %}
+
+            <h4 class="history-prediction-title">Predictions</h4>
+            {% if record.predictions %}
+                {% for model_name, prediction in record.predictions.items() %}
+                <div class="history-prediction">
+                    <span>{{ model_name }}</span>
+                    <strong>{{ prediction }}</strong>
+                </div>
+                {% endfor %}
+            {% else %}
+                <p class="history-muted">No predictions saved.</p>
+            {% endif %}
+        </article>
+        {% endfor %}
+    </div>
+
+    <div class="history-clear-area">
+        <p>Want to remove all saved analysis records?</p>
+        <form method="POST" action="{{ url_for('clear_history') }}"
+              onsubmit="return confirm('Are you sure you want to permanently clear all prediction history?');">
+            <button type="submit" class="history-clear-btn">
+                🗑 Clear All History
+            </button>
+        </form>
+    </div>
+
+    {% else %}
+    <div class="history-empty">
+        <div>📭</div>
+        <h3>No prediction history yet</h3>
+        <p>Run your first water quality analysis to see it recorded here.</p>
+        <a href="{{ url_for('analyzer') }}" class="history-analyze-btn">
+            Open Water Analyzer →
+        </a>
+    </div>
+    {% endif %}
+</section>
+
+{% endblock %}

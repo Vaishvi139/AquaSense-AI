@@ -1,0 +1,172 @@
+
+{% extends "base.html" %}
+
+{% block title %}Water Analyzer | AquaSense AI{% endblock %}
+{% block page_heading %}Water Analyzer{% endblock %}
+
+{% block content %}
+<section class="section-block">
+    <div class="panel">
+        <h2>Analyze Water Quality</h2>
+        <p>Enter your water measurements to estimate the pH.</p>
+
+        {% if error %}
+            <div class="alert alert-danger">{{ error }}</div>
+        {% endif %}
+
+        <form method="POST" action="{{ url_for('analyzer') }}">
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <label for="temperature" class="form-label">Temperature (°C)</label>
+                    <input class="form-control" id="temperature" name="temperature"
+                           type="number" step="any" required
+                           value="{{ values.get('temperature', '25') }}">
+                </div>
+
+                <div class="col-md-6">
+                    <label for="turbidity" class="form-label">Turbidity (NTU)</label>
+                    <input class="form-control" id="turbidity" name="turbidity"
+                           type="number" step="any" required
+                           value="{{ values.get('turbidity', '2.0') }}">
+                </div>
+
+                <div class="col-md-6">
+                    <label for="tds" class="form-label">Total Dissolved Solids (mg/L)</label>
+                    <input class="form-control" id="tds" name="tds"
+                           type="number" step="any" required
+                           value="{{ values.get('tds', '250') }}">
+                </div>
+
+                <div class="col-md-6">
+                    <label for="conductivity" class="form-label">Conductivity (µS/cm)</label>
+                    <input class="form-control" id="conductivity" name="conductivity"
+                           type="number" step="any" required
+                           value="{{ values.get('conductivity', '380') }}">
+                </div>
+
+                <div class="col-md-6">
+                    <label for="dissolved_oxygen" class="form-label">Dissolved Oxygen (mg/L)</label>
+                    <input class="form-control" id="dissolved_oxygen" name="dissolved_oxygen"
+                           type="number" step="any" required
+                           value="{{ values.get('dissolved_oxygen', '7.5') }}">
+                </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary mt-4">
+                Analyze Water pH
+            </button>
+        </form>
+    </div>
+</section>
+
+{% if predictions %}
+<section class="section-block">
+    <div class="panel">
+        <h2>Predicted pH Results</h2>
+        <p>These are model estimates, not laboratory measurements.</p>
+
+        <div class="row g-3">
+            {% for model_name, ph in predictions.items() %}
+            <div class="col-md-4">
+                <div class="panel">
+                    <h3>{{ model_name }}</h3>
+                    <p class="display-6">{{ "%.2f"|format(ph|float) }}</p>
+                    <span>Estimated pH</span>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <a href="{{ url_for('prediction_results') }}"
+           class="btn btn-outline-primary mt-3">
+            View Predictions
+        </a>
+    </div>
+</section>
+
+<!-- One Mathematical Explanation section -->
+<section class="math-explanation-section">
+    <div class="math-explanation-header">
+        <span class="math-label">MODEL INSIGHTS</span>
+        <h2>Mathematical Explanation</h2>
+        <p>
+            Understand how each machine learning model estimates the pH
+            value from your five water-quality parameters.
+        </p>
+    </div>
+
+    <!-- Linear Regression -->
+    <div class="math-model-card">
+        <h3>1. Linear Regression</h3>
+
+        <div class="math-equation">
+            pĤ = b₀ + b₁T + b₂Tu + b₃TDS + b₄C + b₅DO
+        </div>
+
+        <p>
+            Linear Regression learns an intercept and a coefficient for
+            each input feature during training.
+        </p>
+
+        {% if linear_model_details %}
+        <div class="learned-values">
+            <h4>Learned model values</h4>
+
+            <p>
+                <strong>Intercept (b₀):</strong>
+                {{ "%.6f"|format(linear_model_details.intercept) }}
+            </p>
+
+            {% for item in linear_model_details.coefficients %}
+            <p>
+                <strong>{{ item.feature }} coefficient:</strong>
+                {{ "%.6f"|format(item.coefficient) }}
+            </p>
+            {% endfor %}
+        </div>
+        {% else %}
+        <p class="math-note">
+            The learned coefficients are unavailable for display.
+            Check whether the loaded Linear Regression model exposes
+            coef_ and intercept_.
+        </p>
+        {% endif %}
+    </div>
+
+    <!-- Random Forest -->
+    <div class="math-model-card">
+        <h3>2. Random Forest Regression</h3>
+
+        <div class="math-equation">
+            pĤ = (1/N) × Σ pĤᵢ
+        </div>
+
+        <p>
+            Random Forest combines predictions from multiple decision
+            trees. Its final prediction is the average of the individual
+            tree predictions.
+        </p>
+    </div>
+
+    <!-- HistGradientBoosting -->
+    <div class="math-model-card">
+        <h3>3. HistGradientBoosting</h3>
+
+        <div class="math-equation">
+            Final prediction = initial prediction + learned tree updates
+        </div>
+
+        <p>
+            Successive trees learn patterns that improve earlier
+            predictions. Their combined output produces the final
+            predicted pH value.
+        </p>
+
+        <p class="math-note">
+            This is a conceptual explanation, not a display of the
+            model's exact internal tree contributions.
+        </p>
+    </div>
+</section>
+{% endif %}
+{% endblock %}
